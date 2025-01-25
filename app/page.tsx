@@ -1,6 +1,9 @@
+import { getCourses } from "@/queries/courses";
 
-export default function Home() {
+export default async function Home() {
+  const courses = await getCourses();
+  console.log(courses[0]?.modules);
   return (
-   <div>sdfsd</div>
+    <div>sdfsd</div>
   );
 }
