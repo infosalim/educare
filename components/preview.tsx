@@ -11,11 +11,7 @@ interface PreviewProps {
 
 export const Preview = ({ value }: PreviewProps) => {
   // Type annotation for dynamic import result
-  const ReactQuill = useMemo<React.ComponentType<any>>(
-    () =>
-      dynamic(() => import("react-quill"), { ssr: false }),
-    []
-  );
+  const ReactQuill = useMemo(() => dynamic(() => import("react-quill"), { ssr: false }) as React.ComponentType<{ theme: string; readOnly: boolean; value: string }>, []);
 
   return <ReactQuill theme="bubble" readOnly value={value} />;
 };

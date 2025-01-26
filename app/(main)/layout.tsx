@@ -3,7 +3,6 @@ import { SiteFooter } from "@/components/site-footer";
 // import { buttonVariants } from "@/components/ui/button";
 // import { cn } from "@/lib/utils";
 // import Link from "next/link";
-
 // Define types for navLinks and the children prop of MainLayout
 interface NavLink {
   title: string;

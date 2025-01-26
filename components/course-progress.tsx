@@ -1,3 +1,5 @@
+"use client";
+
 import { FC } from "react";
 import { cn } from "@/lib/utils";
 import { Progress } from "./ui/progress";
@@ -17,22 +19,25 @@ const sizeByVariant: Record<Size, string> = {
 };
 
 interface CourseProgressProps {
-  value: number; // Progress value, expected as a number
+  value: number; // Progress value as a number
   variant?: Variant; // Optional, defaults to "default"
   size?: Size; // Optional, defaults to "default"
 }
 
-export const CourseProgress: FC<CourseProgressProps> = ({ value, variant = "default", size = "default" }) => {
+export const CourseProgress: FC<CourseProgressProps> = ({
+  value,
+  variant = "default",
+  size = "default",
+}) => {
   return (
     <div>
       <Progress
         value={value}
-        variant={variant} // eslint-disable-line no-use-before-define
-        className={cn("h-2", variant === "default" && "text-sky-700")}
+        className={cn("h-2", variant === "success" && "bg-emerald-200")}
       />
       <p
         className={cn(
-          "font-medium mt-2 text-sky-700",
+          "font-medium mt-2",
           colorByVariant[variant],
           sizeByVariant[size]
         )}

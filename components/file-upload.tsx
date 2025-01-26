@@ -4,7 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { CloudUpload } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { useDropzone, FileRejection } from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
 
 interface UploadDropzoneProps {
