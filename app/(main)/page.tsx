@@ -8,6 +8,10 @@ import { BookOpen, ArrowRightIcon, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { getCourseList } from "@/queries/courses";
+import { getCategories } from "@/queries/categories";
+
+
 interface Category {
   id: number;
   title: string;
@@ -106,9 +110,15 @@ const courses: Course[] = [
   },
 ];
 
-const HomePage: FC = () => {
+const HomePage: FC = async () => {
+  const courses = await getCourseList();
+  const categories = await getCategories();
+
+  const displayCourses = courses?.slice(0, 4);
+
   return (
     <>
+      {/* Welcome Section */}
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32 grainy">
         <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center relative isolate">
           <div
@@ -130,8 +140,7 @@ const HomePage: FC = () => {
             Learn Today, Lead Tomorrow.
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
-            “You don’t understand anything until you learn it more than one
-            way.”
+            “You don’t understand anything until you learn it more than one way.”
           </p>
           <div className="flex items-center gap-3 flex-wrap justify-center">
             <Link href="" className={cn(buttonVariants({ size: "lg" }))}>
@@ -146,6 +155,7 @@ const HomePage: FC = () => {
           </div>
         </div>
       </section>
+
       {/* Categories Section */}
       <section
         id="categories"
@@ -153,7 +163,6 @@ const HomePage: FC = () => {
       >
         <div className="flex items-center justify-between">
           <SectionTitle>Categories</SectionTitle>
-
           <Link
             href={""}
             className="text-sm font-medium hover:opacity-80 flex items-center gap-1"
@@ -164,13 +173,13 @@ const HomePage: FC = () => {
         <div className="mx-auto grid justify-center gap-4 grid-cols-2 md:grid-cols-3 2xl:grid-cols-4">
           {categories.map((category) => (
             <Link
-              href=""
+              href={`/categories/${category.id}`}
               key={category.id}
               className="relative overflow-hidden rounded-lg border bg-background p-2 hover:scale-105 transition-all duration-500 ease-in-out"
             >
               <div className="flex flex-col gap-4 items-center justify-between rounded-md p-6">
                 <Image
-                  src={category.thumbnail}
+                  src={`/assets/images/categories/${category.thumbnail}`}
                   alt={category.title}
                   width={100}
                   height={100}
@@ -182,53 +191,50 @@ const HomePage: FC = () => {
         </div>
       </section>
 
-      {/* Courses */}
+      {/* Courses Section */}
       <section id="courses" className="container space-y-6 md:py-12 lg:py-24">
         <div className="flex items-center justify-between">
           <SectionTitle>Courses</SectionTitle>
           <Link
-            href={""}
+            href={"/courses"}
             className="text-sm font-medium hover:opacity-80 flex items-center gap-1"
           >
             Browse All <ArrowRightIcon className="h-4 w-4" />
           </Link>
         </div>
         <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4">
-          {courses.map((course) => (
+          {displayCourses.map((course) => (
             <Link key={course.id} href={`/courses/${course.id}`}>
               <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
                 <div className="relative w-full aspect-video rounded-md overflow-hidden">
                   <Image
-                    src="/assets/images/courses/course_1.png"
-                    alt="course"
+                    // src={`/assets/images/courses/${course?.thumbnail}`}
+                    src={`/assets/images/courses/course_1.png`}
+                    alt={course.title}
                     className="object-cover"
                     fill
                   />
                 </div>
                 <div className="flex flex-col pt-2">
                   <div className="text-lg md:text-base font-medium group-hover:text-sky-700 line-clamp-2">
-                    Reactive Accelerator
+                    {course.title}
                   </div>
-                  <p className="text-xs text-muted-foreground">Development</p>
+                  <p className="text-xs text-muted-foreground">{course?.category?.title}</p>
                   <div className="my-3 flex items-center gap-x-2 text-sm md:text-xs">
                     <div className="flex items-center gap-x-1 text-slate-500">
                       <BookOpen className="w-4" />
-                      <span>4 Chapters</span>
+                      <span>{course?.modules?.length} Chapters</span>
                     </div>
                   </div>
-
                   <CourseProgress
                     size="sm"
                     value={80}
-                    // variant={110 === 100 ? "success" : ""}
-                    variant={"success"}
+                    variant={80 >= 100 ? "success" : "default"}
                   />
-
                   <div className="flex items-center justify-between mt-4">
                     <p className="text-md md:text-sm font-medium text-slate-700">
-                      {formatPrice(49)}
+                      {formatPrice(course?.price)}
                     </p>
-
                     <Button
                       variant="ghost"
                       className="text-xs text-sky-700 h-7 gap-1"
